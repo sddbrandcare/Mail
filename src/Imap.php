@@ -773,7 +773,7 @@ class Imap extends Base
         while (time() < ($start + self::TIMEOUT)) {
             list($receivedTag, $line) = explode(' ', $this->getLine(), 2);
             $this->buffer[] = trim($receivedTag . ' ' . $line);
-            if ($receivedTag == 'TAG'.$sentTag) {
+            if ($receivedTag == '#TAG#'.$sentTag) {
                 return $this->buffer;
             }
         }
@@ -793,7 +793,7 @@ class Imap extends Base
     {
         $this->tag ++;
 
-        $line = 'TAG' . $this->tag . ' ' . $command;
+        $line = '#TAG#' . $this->tag . ' ' . $command;
 
         if (!is_array($parameters)) {
             $parameters = array($parameters);
@@ -1089,7 +1089,7 @@ class Imap extends Base
 
             //if the line starts with a fetch
             //it means it's the end of getting an email
-            if (strpos($line, 'FETCH') !== false && strpos($line, 'TAG'.$this->tag) === false) {
+            if (strpos($line, 'FETCH') !== false && strpos($line, '#TAG#'.$this->tag) === false) {
                 //if there is email data
                 if (!empty($email)) {
                     //create the email format and add it to emails
@@ -1150,7 +1150,7 @@ class Imap extends Base
             }
 
             //if there is a tag it means we are at the end
-            if (strpos($line, 'TAG'.$this->tag) !== false) {
+            if (strpos($line, '#TAG#'.$this->tag) !== false) {
                 //if email details are not empty and the last line is just a )
                 if (!empty($email) && strpos(trim($email[count($email) -1]), ')') === 0) {
                     //take it out because that is not part of the details
